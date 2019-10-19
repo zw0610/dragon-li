@@ -1,0 +1,13 @@
+root@a74f83fe273b:~# ./0_compile_main.sh 
+root@a74f83fe273b:~# ./1_compile_shared_library.sh 
+root@a74f83fe273b:~# ./2_compare.sh 
+Without LD_PRELOAD
+Hello World!
+Find 1 device(s).
+GeForce GTX 1080 Ti has total memory of 11721506816 bytes.
+
+With LD_PRELOAD
+Hello World!
+Find 1 device(s).
+I just want to tell you that cuDeviceTotalMem is STILL hijacked!
+GeForce GTX 1080 Ti has total memory of 11721506816 bytes.
