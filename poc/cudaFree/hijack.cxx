@@ -7,7 +7,7 @@
 
 CUresult cuDeviceTotalMem(size_t* bytes, CUdevice dev) {
     void *handle;
-    handle = dlopen("/usr/lib/x86_64-linux-gnu/libcuda.so.1", RTLD_NOW | RTLD_NODELETE);
+    handle = dlopen("/usr/lib64/libcuda.so", RTLD_NOW | RTLD_NODELETE);
 
     printf("%s\n", "cuDeviceTotalMem is hijacked based on env MYMEM!");
 
@@ -28,52 +28,6 @@ CUresult cuDeviceTotalMem(size_t* bytes, CUdevice dev) {
     return res;
 }
 
-CUresult cuMemFree_v2(CUdeviceptr dptr) {
-    void *handle;
-    handle = dlopen("/usr/lib/x86_64-linux-gnu/libcuda.so.1", RTLD_NOW | RTLD_NODELETE);
-
-    printf("%s\n", "The hijacked cuMemFree is called!");
-
-    CUresult (*ori_cu_mem_free)(CUdeviceptr);
-    ori_cu_mem_free = (CUresult (*)(CUdeviceptr))dlsym(handle, "cuMemFree_v2");
-
-    CUresult res = ori_cu_mem_free(dptr);
-
-    dlclose(handle);
-    return res;
-}
-
-// CUresult cuMemFree(CUdeviceptr dptr) {
-//     void *handle;
-//     handle = dlopen("/usr/lib/x86_64-linux-gnu/libcuda.so.1", RTLD_LAZY);
-
-//     printf("%s\n", "The hijacked cuMemFree is called!");
-
-//     CUresult (*ori_cu_mem_free)(CUdeviceptr);
-//     ori_cu_mem_free = (CUresult (*)(CUdeviceptr))dlsym(handle, "cuMemFree_v2");
-
-//     CUresult res = ori_cu_mem_free(dptr);
-
-//     dlclose(handle);
-//     return res;
-// }
-
-CUresult cuMemAlloc_v2(CUdeviceptr* dptr, size_t bytesize) {
-    void *handle;
-    handle = dlopen("/usr/lib/x86_64-linux-gnu/libcuda.so.1", RTLD_NOW | RTLD_NODELETE);
-
-    printf("%s\n", "The hijacked cuMemAlloc is called!");
-
-    CUresult (*ori_cu_mem_alloc)(CUdeviceptr*, size_t);
-    ori_cu_mem_alloc = (CUresult (*)(CUdeviceptr*, size_t))dlsym(handle, "cuMemAlloc_v2");
-
-    printf("Allocating %zu bytes GPU memory", bytesize);
-    CUresult res = ori_cu_mem_alloc(dptr, bytesize);
-
-    dlclose(handle);
-
-    return res;
-}
 
 // Hijack cudaFree
 cudaError_t cudaFree(void* devPtr) {
@@ -92,20 +46,3 @@ cudaError_t cudaFree(void* devPtr) {
     return res;
 }
 
-// Hijack cudaMalloc
-
-cudaError_t cudaMalloc ( void** devPtr, size_t size ) {
-    void *handle;
-    handle = dlopen("/usr/local/cuda-10.1/targets/x86_64-linux/lib/libcudart.so", RTLD_NOW | RTLD_NODELETE);
-
-    printf("%s\n", "The hijacked cudaMalloc is called!");
-
-    cudaError_t (*ori_cuda_malloc)(void**, size_t);
-    ori_cuda_malloc = (cudaError_t (*)(void**, size_t))dlsym(handle, "cudaMalloc_v2");
-
-    cudaError_t res = ori_cuda_malloc(devPtr, size);
-
-    dlclose(handle);
-
-    return res;
-}

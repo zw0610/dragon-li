@@ -1,8 +1,16 @@
 #!/bin/bash
 
-echo "Without LD_PRELOAD"
-./a.out
+echo "HELLO WORLD Without LD_PRELOAD"
+./hello_world.out
 
 echo ""
-echo "With LD_PRELOAD"
-MYMEM=999999 LD_PRELOAD="./libcudahijack.so" ./a.out
+echo "HELLO WORLD With LD_PRELOAD"
+MYMEM=999999 LD_PRELOAD="./hijack.so" ./hello_world.out
+
+echo ""
+echo "VECTOR ADD Without LD_PRELOAD"
+./vector_add.out
+
+echo ""
+echo "VECTOR ADD With LD_PRELOAD"
+LD_PRELOAD="./hijack.so" ./vector_add.out
